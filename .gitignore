@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.coverage
+test.db
+fari.db
+*.egg-info/

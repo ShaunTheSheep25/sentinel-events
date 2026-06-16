@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sentinel Prime Live Feed</title>
+    </head>
+    <body>
+        <h1>Sentinel Prime AI - Live Event Feed</h1>
+        <p id="status">Connecting...</p>
+        <ul id="event-list"></ul>
+        <script>
+            const socket = new WebSocket("ws://127.0.0.1:8000/ws/events")
+            let status = document.getElementById("status")
+            let list = document.getElementById("event-list")
+            socket.onopen = () => {
+                status.textContent = "Connected";
+            };
+            socket.onmessage = (event) => {
+                data = JSON.parse(event.data);
+                let li = document.createElement("li");
+                li.textContent = `(${data.timestamp}) ${data.camera_id} - ${data.event_type} (${data.confidence})`;
+                list.prepend(li);
+            };
+            socket.onclose = () => {
+                status.textContent = "Disconnected";
+            };
+            socket.onerror = () => {
+                status.textContent = "Connection error...";
+            };
+        </script>
+    </body>
+</html>
