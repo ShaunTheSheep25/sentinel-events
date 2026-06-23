@@ -7,13 +7,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc && rm -rf /
 COPY pyproject.toml .
 COPY src/ src/
 
-RUN pip install --no-cache-dir --target=/app/deps .
+RUN pip install --no-cache-dir .
 
 FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/deps /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin/uvicorn /usr/local/bin/uvicorn
 COPY src/ src/
 COPY static/ static/
 
