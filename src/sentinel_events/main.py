@@ -1,9 +1,17 @@
 from fastapi import WebSocket, WebSocketDisconnect, HTTPException, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from sentinel_events.models import Event
 from sentinel_events import store
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class ConnectionManager:
@@ -43,6 +51,12 @@ async def get_events(event_id: int) -> Event:
     if not event:
         raise HTTPException(status_code=404, detail="Event not found.")
     return event
+
+
+@app.get("/events")
+async def list_events(limit: int = 10) -> list[Event]:
+    all_events = store.get_all()
+    return all_events[-limit:]
 
 
 @app.websocket("/ws/events")
