@@ -17,6 +17,7 @@ COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin/uvicorn /usr/local/bin/uvicorn
 COPY src/ src/
 COPY static/ static/
+COPY scripts/ scripts/
 
 ENV PYTHONPATH=/app/src
 
